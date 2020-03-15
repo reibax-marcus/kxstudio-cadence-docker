@@ -1,0 +1,25 @@
+version: '3' 
+services:
+  kxstudio:
+    image: kxstudio
+    build:
+      context: .
+      args:
+        - USER=$USER
+    volumes:
+      # xauth info shows where this file is in your system
+      # $XAUTHORITY environment file also has that information
+       - $XAUTHORITY:/root/.Xauthority:rw
+      # Can be seen with variable $DBUS_SESSION_BUS_ADDRESS
+       - /run/user/1000:/run/user/1000
+    security_opt:
+      # Make sure appArmor doesn't block access
+      # Need to read more documentation and see if it can be more finely tuned
+      - "apparmor=unconfined"
+    network_mode: "host"
+    user: "1000:1000"
+    environment:
+      - USER=1000
+      - DISPLAY=$DISPLAY
+      - DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS
+      - XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR
